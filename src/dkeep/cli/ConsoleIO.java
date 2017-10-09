@@ -20,7 +20,7 @@ public class ConsoleIO {
 		return scanner.nextInt();
 	}
 	public char getChar(){
-		return scanner.nextLine().charAt(0);
+		return scanner.next().charAt(0);
 	}
 	
 	// Printers
@@ -39,11 +39,14 @@ public class ConsoleIO {
 		}
 	}
 	public void printWelcome(GameMain game){
-		System.out.println("Welcome to the Dragon's Bane v" + game.GetVersion());
+		System.out.println("Welcome to the Dragon's Bane v" + game.getVersion());
 	}
 	
 	public void printCurrentState(GameMain game){
-		System.out.println(game.GetState());
+		System.out.println(game.getState());
+	}
+	public void askNextMove(){
+		System.out.print("Next move: ");
 	}
 	public void askNumberDragons(){
 		System.out.print("Choose number of dragons: ");

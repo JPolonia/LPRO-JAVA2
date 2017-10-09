@@ -8,7 +8,7 @@ public class GameElement extends GameObject {
 	}
 
 	// Add food to random location inside the matrix limits
-	public void addRandomGameElement(GameMap screen, GameElement elem) {
+	public void addRandomGameElement(GameMap screen) {
 		int x =0,y =0;
 		boolean valid = false;
 		//check if valid position
@@ -20,7 +20,7 @@ public class GameElement extends GameObject {
 			valid = screen.locationIsValid(x,y);
 		}
 		
-		screen.setObjectOnLocation(elem,x,y);
+		screen.setObjectOnLocation(this,x,y);
 	}
 	
 	

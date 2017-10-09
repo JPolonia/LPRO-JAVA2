@@ -60,4 +60,9 @@ public class GameMap {
 		
 		return true;
 	}
+	
+	public boolean locationDragonValid(int x, int y) {
+		if (this.screenMatrix[y][x] != ' ' ) return false;
+		return true;
+	}
 }

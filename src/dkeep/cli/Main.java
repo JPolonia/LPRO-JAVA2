@@ -1,6 +1,7 @@
 package dkeep.cli;
 
 import dkeep.logic.GameMain;
+import dkeep.logic.GameMain.GameState;
 
 public class Main {
 	
@@ -24,7 +25,7 @@ public class Main {
 		//Init Command Line Interface
 		ConsoleIO cli = new ConsoleIO();
 		
-		//Init Game
+		//Init Maze
 		GameMain game = new GameMain(maze);
 		cli.printWelcome(game);
 		cli.printMap(game);
@@ -38,52 +39,38 @@ public class Main {
 		game.newDragons('D',input);
 		game.newHero('H');
 		
-		/*// Init elements
-		GameElement key = new GameElement('K');
-		key.addRandomGameElement(map, key);
+		//Init Game
+		game.startGame();
+		cli.printCurrentState(game);
 		
-		GameElement exit = new GameElement('E');
-		map.setObjectOnLocation(exit,9,5);
-		
-		GameElement dragon = new GameElement('D');
-		dragon.addRandomGameElement(map, dragon);
-		
-		// Init player
-		Hero hero = new Hero('H');
-		hero.addRandomLocation(map, hero);*/
-		
-		// Input from player
-		//Scanner scanner = new Scanner(System.in);
-		
-		
-		//Get number of dragons from user and update Game
-		//input = scanner.nextInt();
-		
-
 		// The game logic starts here
-		char input_c;
-		boolean isRunning = true;
-
-		while (isRunning) {
-			//screen.PrintScreen();
+		while (game.getState() == GameState.RUNNING) {
+			cli.printMap(game);
+			cli.askNextMove();
+			
 			// Get input from player and do something
-			input = cli.getChar();
-			switch (input) {
+			char input_c = cli.getChar();
+			switch (input_c) {
 				case 'a':
-					//hero.moveLeft(screen, hero);
+					game.hero.moveLeft(game.map);
 					break;
 				case 'd':
-					//hero.moveRight(screen, hero);
+					game.hero.moveRight(game.map);
 					break;
 				case 'w':
-					//hero.moveUp(screen, hero);
+					game.hero.moveUp(game.map);
 					break;
 				case 's':
-					//hero.moveDown(screen, hero);
+					game.hero.moveDown(game.map);
 					break;
 				default: break;
 			}
-			//isRunning = (hero.isFree || hero.isDead) ? false:true;
+			//Check  state
+			
+			//Dragons move
+			
+			//Check state
+
 		}
 		
 		//scanner.close();
