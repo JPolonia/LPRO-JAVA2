@@ -2,13 +2,17 @@ package dkeep.logic;
 
 public class Hero extends GameObject {
 
-	private boolean hasKey = false;
 	private boolean hasSword = false;
 	public boolean isFree = false;
 	public boolean isDead = false;
 	
 	public Hero(char symbol) {
 		setSymbol(symbol);
+	}
+	
+	public void killHero(GameMain game){
+		this.isDead = true;
+		this.transformObject(game, this, '-');
 	}
 	
 	public void addRandomLocation(GameMap screen) {
@@ -27,53 +31,52 @@ public class Hero extends GameObject {
 		screen.setObjectOnLocation(this,x,y);
 	}
 	
-	private void moveHero(GameMap screen, int x, int y, int x_old, int y_old){
+	private void moveHero(GameMain game, int x, int y, int x_old, int y_old){
 		//Check if there is a Dragon waiting...
 		
-		if(screen.nearDragon(x,y)){
-			//Is eaten by dragon - GAME OVER!
-			this.isDead = true;
-			transformHero(screen,this,'-');
-			//screen.PrintGameOver();
+		if(game.map.nearDragon(x,y)){
+			//Check if hero has sword
+			if(this.hasSword) game.killDragonsNearPosition(x,y);
+			else {
+				this.isDead = true; //Is eaten by dragon - GAME OVER!
+				transformObject(game,this,'-');
+			}
+			
 		}
-			switch (screen.getObjectOnLocation(x,y)){
+			switch (game.map.getObjectOnLocation(x,y)){
 				case 'X':   //Hits a wall!
 							break;		
 							
-				case 'E': 	//If he has the key he can exit - GAME COMPLETED!
-							if(this.hasKey) {this.isFree = true;/*screen.PrintGameCompleted()*/;transformHero(screen,this,'o');}
-							else {/*screen.PrintExitClose()*/;break;}
+				case 'E': 	//If hero slained all dragons he can exit - GAME COMPLETED!
+							if(game.allDragonSlained()) this.isFree = true;
+							break;
 							
 				case 'S':	//Gets the key!
 							this.hasSword = true;
+							this.transformObject(game,this,'A');
 							
 				default: 	this.setX(x);
 							this.setY(y);
-							screen.setObjectOnLocation(this,x,y);
-							screen.ClearScreenLocation(x_old, y_old);
+							game.map.setObjectOnLocation(this,x,y);
+							game.map.ClearScreenLocation(x_old, y_old);
 							break;
 			}
 		
 	}
 	
-	public void moveLeft(GameMap screen) {
-		moveHero(screen,this.getX()-1,this.getY(),this.getX(),this.getY());
+	public void moveLeft(GameMain game) {
+		moveHero(game,this.getX()-1,this.getY(),this.getX(),this.getY());
 	}
 	
-	public void moveRight(GameMap screen) {
-		moveHero(screen,this.getX() + 1,this.getY(),this.getX(),this.getY());
+	public void moveRight(GameMain game) {
+		moveHero(game,this.getX() + 1,this.getY(),this.getX(),this.getY());
 	}
 	
-	public void moveUp(GameMap screen) {
-		moveHero(screen,this.getX(),this.getY()-1,this.getX(),this.getY());
+	public void moveUp(GameMain game) {
+		moveHero(game,this.getX(),this.getY()-1,this.getX(),this.getY());
 	}
 	
-	public void moveDown(GameMap screen) {
-		moveHero(screen,this.getX(),this.getY()+1,this.getX(),this.getY());
-	}
-	
-	public void transformHero(GameMap screen,Hero hero, char symbol) {
-		screen.clearHero(hero,symbol);
-		hero.setSymbol(symbol);
+	public void moveDown(GameMain game) {
+		moveHero(game,this.getX(),this.getY()+1,this.getX(),this.getY());
 	}
 }

@@ -37,10 +37,7 @@ public class GameMap {
 	public void setObjectOnLocation(GameObject object, int x, int y) {
 		this.screenMatrix[y][x] = object.getSymbol();
 	}
-	
-	public void clearHero(Hero hero, char newSymbol) {
-		this.screenMatrix[hero.getY()][hero.getX()] = newSymbol;
-	}
+
 	
 	// Utilities
 	public boolean nearDragon(int x, int y) {
@@ -63,6 +60,11 @@ public class GameMap {
 	
 	public boolean locationDragonValid(int x, int y) {
 		if (this.screenMatrix[y][x] != ' ' ) return false;
+		return true;
+	}
+	
+	public boolean moveValid(int x, int y) {
+		if (this.screenMatrix[y][x] == 'X' || this.screenMatrix[y][x] == 'D') return false;
 		return true;
 	}
 }

@@ -31,5 +31,10 @@ public class GameObject {
 	public void setSymbol(char newSymbol) {
 		this.symbol = newSymbol;
 	}
+	public void transformObject(GameMain game,GameObject object,char symbol) {
+		object.setSymbol(symbol);
+		game.map.setObjectOnLocation(object,object.getX(),object.getY());
+		
+	}
 
 }

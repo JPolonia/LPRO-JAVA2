@@ -43,7 +43,7 @@ public class Main {
 		game.startGame();
 		cli.printCurrentState(game);
 		
-		// The game logic starts here
+		//Game is Running
 		while (game.getState() == GameState.RUNNING) {
 			cli.printMap(game);
 			cli.askNextMove();
@@ -52,28 +52,35 @@ public class Main {
 			char input_c = cli.getChar();
 			switch (input_c) {
 				case 'a':
-					game.hero.moveLeft(game.map);
+					game.hero.moveLeft(game);
 					break;
 				case 'd':
-					game.hero.moveRight(game.map);
+					game.hero.moveRight(game);
 					break;
 				case 'w':
-					game.hero.moveUp(game.map);
+					game.hero.moveUp(game);
 					break;
 				case 's':
-					game.hero.moveDown(game.map);
+					game.hero.moveDown(game);
 					break;
 				default: break;
 			}
 			//Check  state
+			game.updateState();
+			if(game.getState() != GameState.RUNNING) break;
 			
 			//Dragons move
+			game.moveAllDragons();
 			
 			//Check state
-
+			game.updateState();
+			
+			//Debug Print
+			cli.PrintGameElements(game);
 		}
 		
-		//scanner.close();
+		if(game.getState() == GameState.COMPLETED) cli.PrintGameCompleted();
+		if(game.getState() == GameState.GAMEOVER) cli.PrintGameOver();
 	}
 	
 	
