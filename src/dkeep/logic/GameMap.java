@@ -41,10 +41,10 @@ public class GameMap {
 	
 	// Utilities
 	public boolean nearDragon(int x, int y) {
-		if (x>0) if (this.screenMatrix[y][x-1] == 'D') return true;
-		if (x<9) if (this.screenMatrix[y][x+1] == 'D') return true;
-		if (y<9) if (this.screenMatrix[y+1][x] == 'D') return true;
-		if (y>0) if (this.screenMatrix[y-1][x] == 'D') return true;
+		if (x>0 && this.screenMatrix[y][x-1] == 'D') return true;
+		if (x<9 && this.screenMatrix[y][x+1] == 'D') return true;
+		if (y<9 && this.screenMatrix[y+1][x] == 'D') return true;
+		if (y>0 && this.screenMatrix[y-1][x] == 'D') return true;
 		return false;
 	}
 	
@@ -66,5 +66,14 @@ public class GameMap {
 	public boolean moveValid(int x, int y) {
 		if (this.screenMatrix[y][x] == 'X' || this.screenMatrix[y][x] == 'D') return false;
 		return true;
+	}
+
+	public boolean nearObject(int x, int y,GameObject object ) {
+		// TODO Auto-generated method stub
+		if (x>0 && this.screenMatrix[y][x-1] == object.getSymbol()) return true;
+		if (x<9 && this.screenMatrix[y][x+1] == object.getSymbol()) return true;
+		if (y<9 && this.screenMatrix[y+1][x] == object.getSymbol()) return true;
+		if (y>0 && this.screenMatrix[y-1][x] == object.getSymbol()) return true;
+		return false;
 	}
 }

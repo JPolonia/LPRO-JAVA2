@@ -42,10 +42,10 @@ public class Main {
 		//Init Game
 		game.startGame();
 		cli.printCurrentState(game);
-		
+		cli.printMap(game);
 		//Game is Running
 		while (game.getState() == GameState.RUNNING) {
-			cli.printMap(game);
+			
 			cli.askNextMove();
 			
 			// Get input from player and do something
@@ -77,6 +77,7 @@ public class Main {
 			
 			//Debug Print
 			cli.PrintGameElements(game);
+			cli.printMap(game);
 		}
 		
 		if(game.getState() == GameState.COMPLETED) cli.PrintGameCompleted();

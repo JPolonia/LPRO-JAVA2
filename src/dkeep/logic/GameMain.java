@@ -64,17 +64,23 @@ public class GameMain {
 		this.hero.addRandomLocation(this.map);
 	}
 	public void killDragonsNearPosition(int x, int y){
-		if (x>0) if (this.map.getObjectOnLocation(x-1,y) == 'D') this.getDragonOnPosition(x-1,y).killDragon(this);
-		if (x<9) if (this.map.getObjectOnLocation(x+1,y) == 'D') this.getDragonOnPosition(x+1,y).killDragon(this);
-		if (y<9) if (this.map.getObjectOnLocation(x,y+1) == 'D') this.getDragonOnPosition(x,y+1).killDragon(this);
-		if (y>0) if (this.map.getObjectOnLocation(x,y-1) == 'D') this.getDragonOnPosition(x,y-1).killDragon(this);
+		if (x>0 && (this.map.getObjectOnLocation(x-1,y) == 'D' || this.map.getObjectOnLocation(x-1,y) == 'd')) this.getDragonOnPosition(x-1,y).killDragon(this);
+		if (x<9 && (this.map.getObjectOnLocation(x+1,y) == 'D' || this.map.getObjectOnLocation(x+1,y) == 'd')) this.getDragonOnPosition(x+1,y).killDragon(this);
+		if (y<9 && (this.map.getObjectOnLocation(x,y+1) == 'D' || this.map.getObjectOnLocation(x,y+1) == 'd')) this.getDragonOnPosition(x,y+1).killDragon(this);
+		if (y>0 && (this.map.getObjectOnLocation(x,y-1) == 'D' || this.map.getObjectOnLocation(x,y-1) == 'd')) this.getDragonOnPosition(x,y-1).killDragon(this);
+	}
+	public void killSleepingDragonsNearPosition(int x, int y){
+		if (x>0 && this.map.getObjectOnLocation(x-1,y) == 'd') this.getDragonOnPosition(x-1,y).killDragon(this);
+		if (x<9 && this.map.getObjectOnLocation(x+1,y) == 'd') this.getDragonOnPosition(x+1,y).killDragon(this);
+		if (y<9 && this.map.getObjectOnLocation(x,y+1) == 'd') this.getDragonOnPosition(x,y+1).killDragon(this);
+		if (y>0 && this.map.getObjectOnLocation(x,y-1) == 'd') this.getDragonOnPosition(x,y-1).killDragon(this);
 	}
 	public void moveAllDragons(){
 		for(int i=0;i<this.dragon.length;i++){
-			this.dragon[i].moveDragon(this);
+			if(this.dragon[i].isAlive) this.dragon[i].moveDragon(this);
 		}
 	}	
-	
+
 	// Booleans
 	public boolean allDragonSlained(){
 		for(int i=0;i<this.dragon.length;i++){

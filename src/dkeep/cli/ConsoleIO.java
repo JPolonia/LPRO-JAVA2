@@ -65,7 +65,7 @@ public class ConsoleIO {
 		System.out.println("Hero: x="+game.hero.getX() + "y="+game.hero.getY()+ " symbol: "+ game.hero.getSymbol()+ " isDead="+game.hero.isDead + " isFree="+game.hero.isFree);
 		System.out.println("Sword: x="+game.sword.getX() + "y="+game.sword.getY()+ " symbol: "+ game.sword.getSymbol() );
 		for(int i=0;i<game.dragon.length;i++){
-			System.out.println("Dragon["+i+"]: x="+game.dragon[i].getX() + "y="+game.dragon[i].getY()+ " symbol: "+ game.dragon[i].getSymbol()+ " isAlive="+game.dragon[i].isAlive);
+			System.out.println("Dragon["+i+"]: x="+game.dragon[i].getX() + "y="+game.dragon[i].getY()+ " symbol: "+ game.dragon[i].getSymbol()+ " isAlive="+game.dragon[i].isAlive + " isAwake=" + game.dragon[i].isAwake);
 		}
 	}
 }

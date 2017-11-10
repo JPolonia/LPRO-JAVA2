@@ -35,32 +35,39 @@ public class Hero extends GameObject {
 		//Check if there is a Dragon waiting...
 		
 		if(game.map.nearDragon(x,y)){
+			System.out.print("HERO NEAR DRAGON!   ");
 			//Check if hero has sword
-			if(this.hasSword) game.killDragonsNearPosition(x,y);
-			else {
+			if(this.hasSword){ 
+				System.out.println("DRAGON DEAD!!");
+				game.killDragonsNearPosition(x,y);
+			}else {
+				System.out.println("HERO DEAD!");
 				this.isDead = true; //Is eaten by dragon - GAME OVER!
 				transformObject(game,this,'-');
 			}
 			
 		}
-			switch (game.map.getObjectOnLocation(x,y)){
-				case 'X':   //Hits a wall!
-							break;		
-							
-				case 'E': 	//If hero slained all dragons he can exit - GAME COMPLETED!
-							if(game.allDragonSlained()) this.isFree = true;
-							break;
-							
-				case 'S':	//Gets the key!
-							this.hasSword = true;
-							this.transformObject(game,this,'A');
-							
-				default: 	this.setX(x);
-							this.setY(y);
-							game.map.setObjectOnLocation(this,x,y);
-							game.map.ClearScreenLocation(x_old, y_old);
-							break;
-			}
+		
+		game.killSleepingDragonsNearPosition(x,y);
+		
+		switch (game.map.getObjectOnLocation(x,y)){
+			case 'X':   //Hits a wall!
+						break;		
+						
+			case 'E': 	//If hero slained all dragons he can exit - GAME COMPLETED!
+						if(game.allDragonSlained()) this.isFree = true;
+						break;
+						
+			case 'S':	//Gets the key!
+						this.hasSword = true;
+						this.transformObject(game,this,'A');
+						
+			default: 	this.setX(x);
+						this.setY(y);
+						game.map.setObjectOnLocation(this,x,y);
+						game.map.ClearScreenLocation(x_old, y_old);
+						break;
+		}
 		
 	}
 	
