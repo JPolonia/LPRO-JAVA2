@@ -12,11 +12,11 @@ public class Main {
 		char[][] maze ={{'X','X','X','X','X','X','X','X','X','X'},
 				  		{'X',' ',' ',' ',' ',' ',' ',' ',' ','X'},
 				  		{'X',' ','X','X',' ','X',' ','X',' ','X'},  
-				  		{'X',' ','X','X',' ','X',' ','X',' ','X'},  
+				  		{'X',' ','X','X',' ','X',' ',' ',' ','X'},  
 				  		{'X',' ','X','X',' ','X',' ','X',' ','X'},
 				  		{'X',' ',' ',' ',' ',' ',' ','X',' ','X'},  
 				  		{'X',' ','X','X',' ','X',' ','X',' ','X'},  
-				  		{'X',' ','X','X',' ','X',' ','X',' ','X'},  
+				  		{'X',' ',' ',' ',' ','X',' ','X',' ','X'},  
 				  		{'X',' ','X','X',' ',' ',' ',' ',' ','X'},  
 				  		{'X','X','X','X','X','X','X','X','X','X'}
 				  	   };
@@ -30,14 +30,19 @@ public class Main {
 		cli.printWelcome(game);
 		cli.printMap(game);
 		cli.println("Maze successfully created!");
-		cli.print("Choose number of dragons: ");
-		int input = cli.getInt();
 		
 		//Init Elements
 		game.newExit('E',9,5);
 		game.newSword('S');
-		game.newDragons('D',input);
+		
+		//Init Dragons
+		cli.print("Choose number of dragons: ");
+		int input = cli.getInt();
+		cli.print("Choose Dragon Movement Strategy (1-Random, 2-Sleepy): ");
+		int input2 = cli.getInt();
+		game.newDragons('D',input,input2);
 		game.newHero('H');
+		//game.hero = new Hero('H',game.map,game.dragon);
 		
 		//Init Game
 		game.startGame();
@@ -52,16 +57,16 @@ public class Main {
 			char input_c = cli.getChar();
 			switch (input_c) {
 				case 'a':
-					game.hero.moveLeft(game);
+					game.hero.moveL(game);
 					break;
 				case 'd':
-					game.hero.moveRight(game);
+					game.hero.moveR(game);
 					break;
 				case 'w':
-					game.hero.moveUp(game);
+					game.hero.moveU(game);
 					break;
 				case 's':
-					game.hero.moveDown(game);
+					game.hero.moveD(game);
 					break;
 				default: break;
 			}
@@ -76,7 +81,7 @@ public class Main {
 			game.updateState();
 			
 			//Debug Print
-			cli.PrintGameElements(game);
+			cli.PrintDebug(game);
 			cli.printMap(game);
 		}
 		

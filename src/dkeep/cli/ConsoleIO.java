@@ -33,7 +33,7 @@ public class ConsoleIO {
 	public void printMap(GameMain game) {
 		for (int i = 0; i < game.map.getScreenHeight(); i++) {
 			for (int j = 0; j < game.map.getScreenWidth(); j++) {
-				System.out.print(game.map.getObjectOnLocation(j,i)+ " ");
+				System.out.print(game.map.board[i][j]+ " ");
 			}
 			System.out.println();
 		}
@@ -60,12 +60,18 @@ public class ConsoleIO {
 	public void PrintGameOver() {
 		System.out.println("YOU GOT EATEN BY AN HUNGRY DRAGON!!");
 	}
-	public void PrintGameElements(GameMain game) {
+	public void PrintDebug(GameMain game) {
 		System.out.println("Positions of Elements:");
-		System.out.println("Hero: x="+game.hero.getX() + "y="+game.hero.getY()+ " symbol: "+ game.hero.getSymbol()+ " isDead="+game.hero.isDead + " isFree="+game.hero.isFree);
-		System.out.println("Sword: x="+game.sword.getX() + "y="+game.sword.getY()+ " symbol: "+ game.sword.getSymbol() );
+		System.out.println(" Sword("+game.sword.getSymbol()+"):("+game.sword.getX() + ","+game.sword.getY()+")");
+		System.out.print(" Hero("+ game.hero.getSymbol()+"): ("+game.hero.getX() + ","+ game.hero.getY()+ ")");
+			if(game.hero.isDead) System.out.print(" isDead");
+			if(game.hero.isFree) System.out.print(" isFree");
+			System.out.print("\n");
 		for(int i=0;i<game.dragon.length;i++){
-			System.out.println("Dragon["+i+"]: x="+game.dragon[i].getX() + "y="+game.dragon[i].getY()+ " symbol: "+ game.dragon[i].getSymbol()+ " isAlive="+game.dragon[i].isAlive + " isAwake=" + game.dragon[i].isAwake);
+			System.out.print(" Dragon["+i+"]("+ game.dragon[i].getSymbol()+"): ("+game.dragon[i].getX() + ","+ game.dragon[i].getY()+ ")");
+				if(!game.dragon[i].isAlive) System.out.print(" isDead");
+				if(!game.dragon[i].isAwake) System.out.print(" isSleeping");
+				System.out.print("\n");
 		}
 	}
 }

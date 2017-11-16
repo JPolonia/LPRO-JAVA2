@@ -3,8 +3,15 @@ package dkeep.logic;
 
 public class GameElement extends GameObject {
 
-	public GameElement(char symbol) {
+	public GameElement(char symbol, GameMap map) {
 		setSymbol(symbol);
+		addRandomGameElement(map);
+	}
+
+	public GameElement(char symbol, int x, int y) {
+		setSymbol(symbol);
+		this.setX(x);
+		this.setY(y);
 	}
 
 	// Add food to random location inside the matrix limits
@@ -19,8 +26,9 @@ public class GameElement extends GameObject {
 			//Check if position is valid
 			valid = screen.locationIsValid(x,y);
 		}
-		
-		screen.setObjectOnLocation(this,x,y);
+		this.setX(x);
+		this.setY(y);
+		//screen.setObjectOnLocation(this,x,y);
 	}
 	
 	

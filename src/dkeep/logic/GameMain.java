@@ -11,6 +11,8 @@ public class GameMain {
 	public GameElement exit;
 	public GameElement sword;
 	public Dragon[] dragon;
+	public GameElement[] wall;
+
 	
 	public GameMain(char[][] maze) {
 		this.currentState = GameState.INIT;
@@ -29,55 +31,86 @@ public class GameMain {
 	}
 	public Dragon getDragonOnPosition(int x, int y){
 		for(int i=0;i<this.dragon.length;i++){
-			if(this.dragon[i].getX()==x && this.dragon[i].getY()==y) return this.dragon[i];
+			if(this.dragon[i].getX() == x && this.dragon[i].getY() == y) return this.dragon[i];
 		}
 		return null;
 	}
 	
 	// Setters
+	public void UpdateMap() {
+		//Print Maze
+		map.GenerateBoard();
+		//Print Exit
+		map.board[this.exit.getY()][this.exit.getX()] = this.exit.getSymbol();	
+		//Print Sword
+		map.board[this.sword.getY()][this.sword.getX()] = this.sword.getSymbol();
+		//Print Dragons
+		for(int i=0;i<this.dragon.length;i++)
+			map.board[this.dragon[i].getY()][this.dragon[i].getX()] = this.dragon[i].getSymbol();
+		//Print Hero
+		map.board[this.hero.getY()][this.hero.getX()] = this.hero.getSymbol();
+	}
+	
 	public void startGame(){
 		this.currentState = GameState.RUNNING;
+		this.UpdateMap();
 	}
 	public void updateState(){
 		if(hero.isDead) this.currentState = GameState.GAMEOVER;
 		if(hero.isFree) this.currentState = GameState.COMPLETED;
+		UpdateMap();
 	}
 	public void newExit(char symbol,int x, int y){
-		this.exit = new GameElement(symbol);
-		this.map.setObjectOnLocation(this.exit,x,y);
+		this.exit = new GameElement(symbol,x,y);
+		//this.map.setObjectOnLocation(this.exit,x,y);
 	}
 	public void newSword(char symbol){
-		this.sword = new GameElement(symbol);
-		this.sword.addRandomGameElement(this.map);
+		this.sword = new GameElement(symbol,this.map);
 	}
-	public void newDragons(char symbol,int number){
+	public void newSword(char symbol,int x, int y){
+		this.sword = new GameElement(symbol,x,y);
+	}
+	public void newDragons(char symbol,int number,int strategy){
 		//Create reference
 		this.dragon = new Dragon[number];
 		//Create object for each reference
-		for(int i=0;i<number;i++){
-			this.dragon[i] = new Dragon(symbol);
-			this.dragon[i].addRandomLocation(this.map);
+		for(int i=0;i<number;i++)
+			this.dragon[i] = new Dragon(symbol,strategy,this.map);
+	}
+	
+	public void newHero(char symbol){
+		this.hero = new Hero(symbol,this.map,this.dragon);
+	}
+	public void newHero(char symbol, int x, int y){
+		this.hero = new Hero(symbol,x,y);
+	}
+	
+	public void fightHeroNearDragons(){
+		boolean fight;
+		for(int i = 0; i<this.dragon.length;i++){
+			fight = false;
+			if ((this.hero.getX()-1 == this.dragon[i].getX()) && this.hero.getY() == this.dragon[i].getY()) fight = true;
+			if ((this.hero.getX()+1 == this.dragon[i].getX()) && this.hero.getY() == this.dragon[i].getY()) fight = true;
+			if ((this.hero.getX() == this.dragon[i].getX()) && this.hero.getY()+1 == this.dragon[i].getY()) fight = true;
+			if ((this.hero.getX() == this.dragon[i].getX()) && this.hero.getY()-1 == this.dragon[i].getY()) fight = true;
+			
+			if(fight){
+				if(this.hero.hasSword) this.dragon[i].killDragon(); 
+				else if(this.dragon[i].isAwake) this.hero.killHero();
+			}
 		}
 	}
-	public void newHero(char symbol){
-		this.hero = new Hero(symbol);
-		this.hero.addRandomLocation(this.map);
-	}
-	public void killDragonsNearPosition(int x, int y){
-		if (x>0 && (this.map.getObjectOnLocation(x-1,y) == 'D' || this.map.getObjectOnLocation(x-1,y) == 'd')) this.getDragonOnPosition(x-1,y).killDragon(this);
-		if (x<9 && (this.map.getObjectOnLocation(x+1,y) == 'D' || this.map.getObjectOnLocation(x+1,y) == 'd')) this.getDragonOnPosition(x+1,y).killDragon(this);
-		if (y<9 && (this.map.getObjectOnLocation(x,y+1) == 'D' || this.map.getObjectOnLocation(x,y+1) == 'd')) this.getDragonOnPosition(x,y+1).killDragon(this);
-		if (y>0 && (this.map.getObjectOnLocation(x,y-1) == 'D' || this.map.getObjectOnLocation(x,y-1) == 'd')) this.getDragonOnPosition(x,y-1).killDragon(this);
-	}
-	public void killSleepingDragonsNearPosition(int x, int y){
-		if (x>0 && this.map.getObjectOnLocation(x-1,y) == 'd') this.getDragonOnPosition(x-1,y).killDragon(this);
-		if (x<9 && this.map.getObjectOnLocation(x+1,y) == 'd') this.getDragonOnPosition(x+1,y).killDragon(this);
-		if (y<9 && this.map.getObjectOnLocation(x,y+1) == 'd') this.getDragonOnPosition(x,y+1).killDragon(this);
-		if (y>0 && this.map.getObjectOnLocation(x,y-1) == 'd') this.getDragonOnPosition(x,y-1).killDragon(this);
+	
+
+	public boolean moveValidDragon(int x, int y){
+		for(int i = 0; i<this.dragon.length;i++){
+			if (this.dragon[i].isAwake && (x == this.dragon[i].getX()) && y == this.dragon[i].getY()) return false;
+		}
+		return true;
 	}
 	public void moveAllDragons(){
 		for(int i=0;i<this.dragon.length;i++){
-			if(this.dragon[i].isAlive) this.dragon[i].moveDragon(this);
+			if(this.dragon[i].isAlive) this.dragon[i].moveDrake(this);
 		}
 	}	
 
@@ -88,6 +121,9 @@ public class GameMain {
 		}
 		return true;
 	}
+
+
+	
    
 }
 

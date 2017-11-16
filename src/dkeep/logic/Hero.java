@@ -1,89 +1,99 @@
 package dkeep.logic;
 
-public class Hero extends GameObject {
+public class Hero extends GameObject{
 
-	private boolean hasSword = false;
+	public boolean hasSword = false;
 	public boolean isFree = false;
 	public boolean isDead = false;
 	
-	public Hero(char symbol) {
+	public Hero(char symbol,GameMap map, Dragon dragon[]) {
 		setSymbol(symbol);
+		addRandomLocation(map,dragon);
 	}
 	
-	public void killHero(GameMain game){
+	public Hero(char symbol,int x, int y) {
+		setSymbol(symbol);
+		this.setX(x);
+		this.setY(y);
+	}
+	
+		
+	public void killHero(){
 		this.isDead = true;
-		this.transformObject(game, this, '-');
+		this.setSymbol('-');
 	}
 	
-	public void addRandomLocation(GameMap screen) {
+	public void addRandomLocation(GameMap map, Dragon dragon[]) {
 		int x =0,y =0;
 		boolean valid = false;
 		//check if valid position
 		while(!valid){
 			//Generate random positions
-			x = (int) (Math.random() * (screen.getScreenWidth() - 1));
-			y = (int) (Math.random() * (screen.getScreenHeight() - 1));
+			x = (int) (Math.random() * (map.getScreenWidth() - 1));
+			y = (int) (Math.random() * (map.getScreenHeight() - 1));
 			//Check if position is valid
-			valid = screen.locationIsValid(x,y);
+			valid = map.locationIsValid(x,y);
+			if(valid){
+				this.setX(x);
+				this.setY(y);
+				valid = this.nearDragonAwake(dragon) ? false : true;
+			}
 		}
-		this.setX(x);
-		this.setY(y);
-		screen.setObjectOnLocation(this,x,y);
 	}
 	
 	private void moveHero(GameMain game, int x, int y, int x_old, int y_old){
 		//Check if there is a Dragon waiting...
-		
-		if(game.map.nearDragon(x,y)){
-			System.out.print("HERO NEAR DRAGON!   ");
-			//Check if hero has sword
-			if(this.hasSword){ 
-				System.out.println("DRAGON DEAD!!");
-				game.killDragonsNearPosition(x,y);
-			}else {
-				System.out.println("HERO DEAD!");
-				this.isDead = true; //Is eaten by dragon - GAME OVER!
-				transformObject(game,this,'-');
-			}
-			
-		}
-		
-		game.killSleepingDragonsNearPosition(x,y);
-		
 		switch (game.map.getObjectOnLocation(x,y)){
-			case 'X':   //Hits a wall!
-						break;		
+			case 'X':   break; //Hits a wall!
 						
-			case 'E': 	//If hero slained all dragons he can exit - GAME COMPLETED!
-						if(game.allDragonSlained()) this.isFree = true;
+			case 'D':	if(this.hasSword){
+							this.setX(x);
+							this.setY(y);
+							game.getDragonOnPosition(x,y).killDragon();
+							System.out.println("DRAGON KILLED!!");
+						}
 						break;
 						
-			case 'S':	//Gets the key!
-						this.hasSword = true;
-						this.transformObject(game,this,'A');
+			case 'd':  	if(this.hasSword){
+							game.getDragonOnPosition(x,y).killDragon();
+							System.out.println("SLEEPY DRAGON KILLED!!");
+						}
+						break;
+						
+			case 'E': 	if(game.allDragonSlained()  && game.hero.hasSword) this.isFree = true; //If hero slained all dragons he can exit - GAME COMPLETED!
+						break;
+						
+			case 'S':	this.hasSword = true; //Gets the key!
+						this.setSymbol('A');
+						game.sword.setSymbol('o');
 						
 			default: 	this.setX(x);
 						this.setY(y);
-						game.map.setObjectOnLocation(this,x,y);
-						game.map.ClearScreenLocation(x_old, y_old);
 						break;
 		}
 		
+		game.fightHeroNearDragons();
+		
 	}
 	
-	public void moveLeft(GameMain game) {
+	public void moveL(GameMain game) {
 		moveHero(game,this.getX()-1,this.getY(),this.getX(),this.getY());
 	}
 	
-	public void moveRight(GameMain game) {
+	public void moveR(GameMain game) {
 		moveHero(game,this.getX() + 1,this.getY(),this.getX(),this.getY());
 	}
 	
-	public void moveUp(GameMain game) {
+	public void moveU(GameMain game) {
 		moveHero(game,this.getX(),this.getY()-1,this.getX(),this.getY());
 	}
 	
-	public void moveDown(GameMain game) {
+	public void moveD(GameMain game) {
 		moveHero(game,this.getX(),this.getY()+1,this.getX(),this.getY());
+	}
+
+	public void move(GameMain game) {
+		// TODO Auto-generated method stub
+		
 	}
 }
